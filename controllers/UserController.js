@@ -29,6 +29,7 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
         token: generateToken(user),
     });
 })
+
 export const login = expressAsyncHandler(async (req, res) => {
     const user = await UserModel.findOne({ email: req.body.email, password: req.body.password })
     if (user) {
@@ -44,5 +45,16 @@ export const login = expressAsyncHandler(async (req, res) => {
         });
     } else {
         res.status(401).send({ message: "invalid email or password" })
+    }
+})
+
+export const DeleteUser = expressAsyncHandler(async (req, res) => {
+    const user = await UserModel.findById({ _id: req.params.id })
+
+    if (user) {
+        await user.remove()
+        res.send({ message: 'user deleted' })
+    } else {
+        res.send({ message: 'user not exists' })
     }
 })
